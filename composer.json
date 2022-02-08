@@ -8,7 +8,9 @@
             "email": "wawan.callahan@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "rakit/validation": "^1.4"
+    },
     "autoload": {
         "psr-4": {
             "Model\\": "Model",
