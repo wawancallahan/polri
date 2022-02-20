@@ -9,6 +9,7 @@ use Model\SuratPerintah;
 use Model\TemaLaporan;
 
 $id = input_form($_GET['id']);
+
 $regu_id = input_form($_GET['regu_id']);
 
 $model = new SuratPerintah();
@@ -18,7 +19,7 @@ if ($item === null) {
     $_SESSION['type'] = 'danger';
     $_SESSION['message'] = 'Data Tidak Ditemukan';
 
-    header('Location: regu_perintah.php?id=' . $regu_id);
+    header('Location: regu_surat_perintah.php?id=' . $regu_id);
     die();
 }
 
@@ -105,6 +106,12 @@ ob_start();
                                 <h3 class="card-title">Daftar Nama Kegiatan</h3>
                             </div>
 
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <button class="btn btn-primary" data-toggle="modal" data-target="#modal-tambah">Tambah</button>
+                                </div>
+                            </div>
+
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0">
                                 <table class="table table-hover text-nowrap">
@@ -114,6 +121,7 @@ ob_start();
                                             <th>Nama</th>
                                             <th>Tanggal</th>
                                             <th>Kegiatan</th>
+                                            <th>Option</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -123,25 +131,91 @@ ob_start();
                                                 <td><?php echo $temaLaporanKegiatanItem['nama'] ?></td>
                                                 <td><?php echo $temaLaporanKegiatanItem['tanggal'] ?></td>
                                                 <td>
-                                                    <a href="laporan_kegiatan_harian.php?id=<?php echo $temaLaporanKegiatanItem['id'] ?>&surat_perintah_id=<?php echo $item['id'] ?>&regu_id=<?php echo $regu_id ?>" class="btn btn-success btn-sm">
+                                                    <a href="regu_kegiatan_harian.php?id=<?php echo $temaLaporanKegiatanItem['id'] ?>&surat_perintah_id=<?php echo $item['id'] ?>&regu_id=<?php echo $regu_id ?>" class="btn btn-success btn-sm">
                                                         <i class="fa fa-file"></i> Kegiatan
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="#" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-edit-<?php echo $index ?>">
+                                                        <i class="fa fa-edit"></i> Edit
+                                                    </a>
+                                                    <a href="hapus_tema_laporan_proses.php?id=<?php echo $temaLaporanKegiatanItem['id'] ?>" class="btn btn-danger btn-sm">
+                                                        <i class="fa fa-trash"></i> Hapus
                                                     </a>
                                                 </td>
                                             </tr>
                                         <?php } ?>
                                     </tbody>
                                 </table>
-
-                                <div class="form-group">
-                                   <a href="laporan_harian_print.php?id=<?php echo $item['id'] ?>" target="_blank" class="btn btn-info btn-block">
-                                       <i class="fa fa-print"></i> Print Laporan harian
-                                   </a>
-                               </div>
                             </div>
                             <!-- /.card-body -->
                         </div>
                     </div>
                 </section>
+
+                <?php foreach ($temaLaporanKegiatanItems as $index => $temaLaporanKegiatanItem) { ?> 
+                    <!-- Modal -->
+                    <div class="modal fade" id="modal-edit-<?php echo $index ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <form action="edit_tema_laporan_proses.php" method="POST">
+                                    <input type="hidden" name="id" value="<?php echo $temaLaporanKegiatanItem['id'] ?>">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Edit Nama Kegiatan</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label>Nama</label>
+                                            <input type="text" class="form-control" name="nama" value="<?php echo $temaLaporanKegiatanItem['nama'] ?>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Tanggal</label>
+                                            <input type="date" class="form-control" name="tanggal" id="" value="<?php echo $temaLaporanKegiatanItem['tanggal'] ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+
+                 <!-- Modal -->
+                 <div class="modal fade" id="modal-tambah" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <form action="tambah_tema_laporan_proses.php" method="POST">
+                                <input type="hidden" name="id" value="<?php echo $item['id'] ?>">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Tambah Nama Kegiatan</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label>Nama</label>
+                                        <input type="text" class="form-control" name="nama" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tanggal</label>
+                                        <input type="date" class="form-control" name="tanggal" id="" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <footer class="main-footer">

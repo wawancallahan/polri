@@ -2,7 +2,23 @@
 
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/Config/Session.php';
+require __DIR__ . '/Config/Form.php';
 // require __DIR__ . '/middleware/hasAuth.php';
+
+use Model\Regu;
+
+$model = new Regu();
+
+$id = input_form($_GET['id'] ?? null);
+$item = $model->find($id);
+
+if ($item === null) {
+    $_SESSION['type'] = 'danger';
+    $_SESSION['message'] = 'Data Tidak Ditemukan';
+
+    header('location: regu.php');
+    die();
+}
 
 ob_start();
 
@@ -53,9 +69,9 @@ ob_start();
             <div class="main-content">
                 <section class="section">
                     <div class="section-header">
-                        <h1>Anggota</h1>
+                        <h1>Regu</h1>
                         <div class="section-header-breadcrumb">
-                            <div class="breadcrumb-item active"><a href="#">Anggota</a></div>
+                            <div class="breadcrumb-item active"><a href="#">Regu</a></div>
                         </div>
                     </div>
                     <div class="section-body">
@@ -65,31 +81,20 @@ ob_start();
                         <!-- general form elements -->
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Tambah Anggota</h3>
+                                <h3 class="card-title">Edit Regu</h3>
                             </div>
                             <!-- /.card-header -->
                             <!-- form start -->
-                            <form action="tambah_anggota_proses.php" method="POST">
+                            <form action="edit_regu_proses.php" method="POST">
+                                <input type="hidden" name="id" value="<?php echo $id ?>">
                                 <div class="card-body">
                                     <div class="form-group">
+                                        <label>Kode</label>
+                                        <input type="text" name="kode" class="form-control" placeholder="Kode" value="<?php echo $item['kode'] ?>" required>
+                                    </div>
+                                    <div class="form-group">
                                         <label>Nama</label>
-                                        <input type="text" name="nama" class="form-control" placeholder="Nama" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Pangkat</label>
-                                        <input type="text" name="pangkat" class="form-control" placeholder="Pangkat" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>NRP</label>
-                                        <input type="text" name="nrp" class="form-control" placeholder="NRP" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Username</label>
-                                        <input type="text" name="username" class="form-control" placeholder="Username" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Password</label>
-                                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                                        <input type="text" name="nama" class="form-control" placeholder="Nama" value="<?php echo $item['nama'] ?>" required>
                                     </div>
                                 </div>
                                 <!-- /.card-body -->

@@ -4,12 +4,24 @@ namespace Model;
 
 use Model\DatabaseModel;
 
-class Anggota extends DatabaseModel {
+class TemaLaporan extends DatabaseModel {
     public function index ()
     {
-        $query = "SELECT * FROM anggota";
+        $query = "SELECT * FROM tema_laporan";
         $statement = $this->pdo->prepare($query);
         $statement->execute();
+
+        $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+
+    public function indexBySuratPerintah ($id) {
+        $query = "SELECT * FROM tema_laporan WHERE surat_perintah_id = ?";
+        $statement = $this->pdo->prepare($query);
+        $statement->execute([
+            $id
+        ]);
 
         $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -19,22 +31,20 @@ class Anggota extends DatabaseModel {
     public function create ($data)
     {
         try {
+            $surat_perintah_id = $data['surat_perintah_id'] ?? "";
             $nama = $data['nama'] ?? "";
-            $pangkat = $data['pangkat'] ?? "";
-            $kode = $data['kode'] ?? "";
-            $user_id = $data['user_id'] ?? "";
+            $tanggal = $data['tanggal'] ?? "";
     
-            if ($nama !== "" && $pangkat !== "" && $kode !== "" && $user_id !== "") {
+            if ($surat_perintah_id !== "" && $nama !== "" && $tanggal !== "") {
     
-                $query = "INSERT INTO anggota VALUES(null, ?, ?, ?, ?)";
+                $query = "INSERT INTO tema_laporan VALUES(null, ?, ?, ?)";
                 
                 $statement = $this->pdo->prepare($query);
                 
                 $execute = $statement->execute([
-                    $pangkat,
+                    $surat_perintah_id,
                     $nama,
-                    $kode,
-                    $user_id
+                    $tanggal
                 ]);
 
                 return $execute ? 'success' : 'fail';
@@ -52,35 +62,7 @@ class Anggota extends DatabaseModel {
         try {
             if ($id !== "") {
     
-                $query = "SELECT * FROM anggota WHERE id = ?";
-                
-                $statement = $this->pdo->prepare($query);
-                
-                $statement->execute([
-                    $id,
-                ]);
-
-                if ($statement->rowCount() <= 0) {
-                    return null;
-                }
-
-                return $statement->fetch(\PDO::FETCH_ASSOC);
-            } else {
-                
-                return null;
-               
-            }
-        } catch (Exception $e) {
-            return null;
-        } 
-    }
-
-    public function findByUserId($id)
-    {
-        try {
-            if ($id !== "") {
-    
-                $query = "SELECT * FROM anggota WHERE user_id = ?";
+                $query = "SELECT * FROM tema_laporan WHERE id = ?";
                 
                 $statement = $this->pdo->prepare($query);
                 
@@ -106,19 +88,18 @@ class Anggota extends DatabaseModel {
     public function update ($data, $id)
     {
         try {
-            $nama = $data['nama'] ?? "";
-            $pangkat = $data['pangkat'] ?? "";
-            $kode = $data['kode'] ?? "";
+            $nama = $data['nama'] ?? null;
+            $tanggal = $data['tanggal'] ?? null;
 
-            if ($nama !== "" && $pangkat !== "" && $kode !== "") {
-                $query = "UPDATE anggota SET nama = ?, pangkat = ?, kode = ? WHERE user_id = ?";
+            if ($nama !== "" && $tanggal !== "") {
+    
+                $query = "UPDATE tema_laporan SET nama = ?, tanggal = ? WHERE id = ?";
                 
                 $statement = $this->pdo->prepare($query);
                 
                 $execute = $statement->execute([
                     $nama,
-                    $pangkat,
-                    $kode,
+                    $tanggal,
                     $id
                 ]);
 
@@ -137,30 +118,7 @@ class Anggota extends DatabaseModel {
         try {
             if ($id !== "") {
     
-                $query = "DELETE FROM anggota WHERE id = ?";
-                
-                $statement = $this->pdo->prepare($query);
-                
-                $execute = $statement->execute([
-                    $id,
-                ]);
-
-                return $execute;
-            } else {
-                return false;
-               
-            }
-        } catch (\Exception $e) {
-            return false;
-        } 
-    }
-
-    public function deleteByUserId($id)
-    {
-        try {
-            if ($id !== "") {
-    
-                $query = "DELETE FROM anggota WHERE user_id = ?";
+                $query = "DELETE FROM tema_laporan WHERE id = ?";
                 
                 $statement = $this->pdo->prepare($query);
                 

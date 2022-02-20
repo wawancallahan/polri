@@ -1,18 +1,18 @@
 <?php
 
-require __DIR__ . '/config/session.php';
 require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/Config/Session.php';
 // require __DIR__ . '/middleware/hasAuth.php';
 
 use Model\Anggota;
 
-$anggotaModel = new Anggota();
-$anggotaItems = $anggotaModel->index();
+$model = new Anggota();
+$items = $model->index();
 
 ob_start();
 
 extract([
-    'anggotaItems' => $anggotaItems
+    'items' => $items
 ]);
 
 ?>
@@ -92,18 +92,18 @@ extract([
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($anggotaItems as $index => $anggotaItem) { ?>
+                                        <?php foreach ($items as $index => $item) { ?>
                                             <tr>
                                                 <td><?php echo $index + 1 ?></td>
-                                                <td><?php echo $anggotaItem['nama'] ?></td>
-                                                <td><?php echo $anggotaItem['pangkat'] ?></td>
-                                                <td><?php echo $anggotaItem['kode'] ?></td>
+                                                <td><?php echo $item['nama'] ?></td>
+                                                <td><?php echo $item['pangkat'] ?></td>
+                                                <td><?php echo $item['kode'] ?></td>
                                                 <td>
-                                                    <a href="edit_anggota.php?id=<?php echo $anggotaItem['id'] ?>" class="btn btn-warning btn-sm">
+                                                    <a href="edit_anggota.php?id=<?php echo $item['user_id'] ?>" class="btn btn-warning btn-sm">
                                                         <i class="fa fa-edit"></i> Edit
                                                     </a>
                                                     
-                                                    <a href="hapus_anggota_proses.php?id=<?php echo $anggotaItem['id'] ?>" class="btn btn-danger btn-sm">
+                                                    <a href="hapus_anggota_proses.php?id=<?php echo $item['user_id'] ?>" class="btn btn-danger btn-sm">
                                                         <i class="fa fa-trash"></i> Hapus
                                                     </a>
                                                 </td>

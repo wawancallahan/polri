@@ -2,7 +2,30 @@
 
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/Config/Session.php';
+require __DIR__ . '/Config/Form.php';
 // require __DIR__ . '/middleware/hasAuth.php';
+
+use Model\TemaLaporan;
+use Model\KegiatanLaporan;
+
+$id = input_form($_GET['id']);
+$surat_perintah_id = input_form($_GET['surat_perintah_id']);
+$regu_id = input_form($_GET['regu_id']);
+
+$model = new TemaLaporan();
+$item = $model->find($id);
+
+if ($item === null) {
+    $_SESSION['type'] = 'danger';
+    $_SESSION['message'] = 'Data Tidak Ditemukan';
+
+    header('Location: laporan_harian.php?id=' . $surat_perintah_id . '&regu_id=' . $regu_id);
+    die();
+}
+
+$modelKegiatanLaporan = new KegiatanLaporan();
+$kegiatanLaporanItems = $modelKegiatanLaporan->indexByTemaLaporan($item['id']);
+
 
 ob_start();
 
@@ -24,6 +47,7 @@ ob_start();
     <!-- Template CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/custom.css">
 </head>
 
 <body class="layout-3">
@@ -53,52 +77,69 @@ ob_start();
             <div class="main-content">
                 <section class="section">
                     <div class="section-header">
-                        <h1>Anggota</h1>
+                        <h1>Kegiatan</h1>
                         <div class="section-header-breadcrumb">
-                            <div class="breadcrumb-item active"><a href="#">Anggota</a></div>
+                            <div class="breadcrumb-item active"><a href="#">Kegiatan</a></div>
                         </div>
                     </div>
                     <div class="section-body">
-
                         <?php require_once __DIR__ . '/components/flash.php' ?>
 
-                        <!-- general form elements -->
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Tambah Anggota</h3>
+                                <h3 class="card-title">Nama Kegiatan</h3>
                             </div>
                             <!-- /.card-header -->
-                            <!-- form start -->
-                            <form action="tambah_anggota_proses.php" method="POST">
-                                <div class="card-body">
-                                    <div class="form-group">
-                                        <label>Nama</label>
-                                        <input type="text" name="nama" class="form-control" placeholder="Nama" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Pangkat</label>
-                                        <input type="text" name="pangkat" class="form-control" placeholder="Pangkat" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>NRP</label>
-                                        <input type="text" name="nrp" class="form-control" placeholder="NRP" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Username</label>
-                                        <input type="text" name="username" class="form-control" placeholder="Username" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Password</label>
-                                        <input type="password" name="password" class="form-control" placeholder="Password" required>
-                                    </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label>Nama</label>
+                                    <input type="text" class="form-control" value="<?php echo $item['nama'] ?>" disabled>
                                 </div>
-                                <!-- /.card-body -->
-                                <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                <div class="form-group">
+                                    <label>Tanggal</label>
+                                    <input type="text" class="form-control" value="<?php echo $item['tanggal'] ?>" disabled>
                                 </div>
-                            </form>
+                            </div>
                         </div>
-                        <!-- /.card -->
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Daftar Kegiatan</h3>
+                            </div>
+
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama</th>
+                                            <th>Person</th>
+                                            <th>Sasaran</th>
+                                            <th>Hasil Kegiatan</th>
+                                            <th>Dokumentasi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($kegiatanLaporanItems as $index => $kegiatanLaporanItem) { ?>
+                                            <tr>
+                                                <td><?php echo $index + 1 ?></td>
+                                                <td><?php echo $kegiatanLaporanItem['nama'] ?></td>
+                                                <td><?php echo $kegiatanLaporanItem['person'] ?></td>
+                                                <td><?php echo $kegiatanLaporanItem['sasaran'] ?></td>
+                                                <td><?php echo $kegiatanLaporanItem['hasil_kegiatan'] ?></td>
+                                                <td>
+                                                    <div class="kegiatan-harian-image">
+                                                        <img src="files/<?php echo $kegiatanLaporanItem['dokumentasi'] ?>" alt="">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
                     </div>
                 </section>
             </div>
@@ -131,6 +172,7 @@ ob_start();
     <script src="assets/js/custom.js"></script>
 </body>
 </html>
+
 
 <?php
 

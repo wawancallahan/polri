@@ -6,3 +6,13 @@
  */
 
 /*# sourceMappingURL=custom.css.map */
+
+.kegiatan-harian-image {
+    width: 150px;
+    height: 80px;
+}
+
+.kegiatan-harian-image img {
+    width: 100%;
+    height: 100%;
+}

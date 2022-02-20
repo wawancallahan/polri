@@ -2,7 +2,27 @@
 
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/Config/Session.php';
+require __DIR__ . '/Config/Form.php';
 // require __DIR__ . '/middleware/hasAuth.php';
+
+use Model\Regu;
+use Model\SuratPerintah;
+
+$id = input_form($_GET['id']);
+
+$model = new Regu();
+$item = $model->find($id);
+
+if ($item === null) {
+    $_SESSION['type'] = 'danger';
+    $_SESSION['message'] = 'Data Tidak Ditemukan';
+
+    header('location: regu_laporan_harian.php');
+    die();
+}
+
+$modelSuratPerintah = new SuratPerintah();
+$suratPerintahItems = $modelSuratPerintah->indexByReguId($item['id']);
 
 ob_start();
 
@@ -53,52 +73,61 @@ ob_start();
             <div class="main-content">
                 <section class="section">
                     <div class="section-header">
-                        <h1>Anggota</h1>
+                        <h1>Surat Perintah</h1>
                         <div class="section-header-breadcrumb">
-                            <div class="breadcrumb-item active"><a href="#">Anggota</a></div>
+                            <div class="breadcrumb-item active"><a href="#">Surat Perintah</a></div>
                         </div>
                     </div>
                     <div class="section-body">
-
                         <?php require_once __DIR__ . '/components/flash.php' ?>
 
-                        <!-- general form elements -->
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Tambah Anggota</h3>
+                                <h3 class="card-title">Regu</h3>
                             </div>
                             <!-- /.card-header -->
-                            <!-- form start -->
-                            <form action="tambah_anggota_proses.php" method="POST">
-                                <div class="card-body">
-                                    <div class="form-group">
-                                        <label>Nama</label>
-                                        <input type="text" name="nama" class="form-control" placeholder="Nama" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Pangkat</label>
-                                        <input type="text" name="pangkat" class="form-control" placeholder="Pangkat" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>NRP</label>
-                                        <input type="text" name="nrp" class="form-control" placeholder="NRP" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Username</label>
-                                        <input type="text" name="username" class="form-control" placeholder="Username" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Password</label>
-                                        <input type="password" name="password" class="form-control" placeholder="Password" required>
-                                    </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label>Nama</label>
+                                    <input type="text" name="nama" class="form-control" placeholder="Nama" value="<?php echo $item['nama'] ?>" disabled>
                                 </div>
-                                <!-- /.card-body -->
-                                <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </div>
-                            </form>
+                            </div>
                         </div>
-                        <!-- /.card -->
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Daftar Surat Perintah</h3>
+                            </div>
+
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nomor</th>
+                                            <th>Tanggal</th>
+                                            <th>Laporan Harian</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($suratPerintahItems as $index => $suratPerintahItem) { ?>
+                                            <tr>
+                                                <td><?php echo $index + 1 ?></td>
+                                                <td><?php echo $suratPerintahItem['nomor'] ?></td>
+                                                <td><?php echo $suratPerintahItem['tanggal'] ?></td>
+                                                <td>
+                                                    <a href="regu_laporan_harian.php?id=<?php echo $suratPerintahItem['id'] ?>&regu_id=<?php echo $item['id'] ?>" class="btn btn-success btn-sm">
+                                                        <i class="fa fa-file"></i> Laporan Harian
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
                     </div>
                 </section>
             </div>
@@ -131,6 +160,7 @@ ob_start();
     <script src="assets/js/custom.js"></script>
 </body>
 </html>
+
 
 <?php
 

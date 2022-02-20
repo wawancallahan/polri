@@ -1,30 +1,32 @@
 <?php
 
 require __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/Config/Session.php';
 require __DIR__ . '/Config/Form.php';
+require __DIR__ . '/Config/Session.php';
 // require __DIR__ . '/middleware/hasAuth.php';
 
-use Model\SuratPerintah;
-use Model\TemaLaporan;
+use Model\Regu;
+use Model\ReguAnggota;
+use Model\Anggota;
 
-$id = input_form($_GET['id']);
-$regu_id = input_form($_GET['regu_id']);
+$model = new Regu();
 
-$model = new SuratPerintah();
+$id = input_form($_GET['id'] ?? null);
 $item = $model->find($id);
 
 if ($item === null) {
     $_SESSION['type'] = 'danger';
     $_SESSION['message'] = 'Data Tidak Ditemukan';
 
-    header('Location: regu_perintah.php?id=' . $regu_id);
+    header('location: regu.php');
     die();
 }
 
-$modelTemaLaporanKegiatan = new TemaLaporan();
-$temaLaporanKegiatanItems = $modelTemaLaporanKegiatan->indexBySuratPerintah($item['id']);
+$modelReguAnggota = new ReguAnggota();
+$reguAnggotaItems = $modelReguAnggota->indexByReguId($item['id']);
 
+$modelAnggota = new Anggota();
+$anggotaItems = $modelAnggota->index();
 
 ob_start();
 
@@ -75,71 +77,71 @@ ob_start();
             <div class="main-content">
                 <section class="section">
                     <div class="section-header">
-                        <h1>Surat Perintah</h1>
+                        <h1>Regu</h1>
                         <div class="section-header-breadcrumb">
-                            <div class="breadcrumb-item active"><a href="#">Surat Perintah</a></div>
+                            <div class="breadcrumb-item active"><a href="#">Regu</a></div>
                         </div>
                     </div>
                     <div class="section-body">
+
                         <?php require_once __DIR__ . '/components/flash.php' ?>
 
+                        <!-- general form elements -->
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Surat Perintah</h3>
+                                <h3 class="card-title">Regu</h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label>Nomor</label>
-                                    <input type="text" class="form-control" value="<?php echo $item['nomor'] ?>" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label>Tanggal</label>
-                                    <input type="text" class="form-control" value="<?php echo $item['tanggal'] ?>" disabled>
+                                    <label>Nama</label>
+                                    <input type="text" name="nama" class="form-control" placeholder="Nama" value="<?php echo $item['nama'] ?>" disabled>
                                 </div>
                             </div>
                         </div>
 
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Daftar Nama Kegiatan</h3>
+                                <h3 class="card-title">Regu Anggota</h3>
                             </div>
-
                             <!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <button class="btn btn-primary" data-toggle="modal" data-target="#modal-tambah">Tambah Regu Anggota</button>
+                                </div>
+                            </div>
                             <div class="card-body table-responsive p-0">
                                 <table class="table table-hover text-nowrap">
                                     <thead>
                                         <tr>
                                             <th>No</th>
                                             <th>Nama</th>
-                                            <th>Tanggal</th>
-                                            <th>Kegiatan</th>
+                                            <th>NRP</th>
+                                            <th>Pangkat</th>
+                                            <th>Tipe</th>
+                                            <th>Option</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($temaLaporanKegiatanItems as $index => $temaLaporanKegiatanItem) { ?>
+                                        <?php foreach ($reguAnggotaItems as $index => $reguAnggotaItem) { ?>
                                             <tr>
                                                 <td><?php echo $index + 1 ?></td>
-                                                <td><?php echo $temaLaporanKegiatanItem['nama'] ?></td>
-                                                <td><?php echo $temaLaporanKegiatanItem['tanggal'] ?></td>
+                                                <td><?php echo $reguAnggotaItem['nama'] ?></td>
+                                                <td><?php echo $reguAnggotaItem['kode'] ?></td>
+                                                <td><?php echo $reguAnggotaItem['pangkat'] ?></td>
+                                                <td><?php echo $reguAnggotaItem['type'] == 1 ? 'Ketua' : 'Anggota' ?></td>
                                                 <td>
-                                                    <a href="laporan_kegiatan_harian.php?id=<?php echo $temaLaporanKegiatanItem['id'] ?>&surat_perintah_id=<?php echo $item['id'] ?>&regu_id=<?php echo $regu_id ?>" class="btn btn-success btn-sm">
-                                                        <i class="fa fa-file"></i> Kegiatan
+                                                    <a href="hapus_regu_anggota_proses.php?id=<?php echo $reguAnggotaItem['id'] ?>&regu_id=<?php echo $item['id'] ?>" class="btn btn-danger btn-sm">
+                                                        <i class="fa fa-trash"></i> Hapus
                                                     </a>
                                                 </td>
                                             </tr>
                                         <?php } ?>
                                     </tbody>
                                 </table>
-
-                                <div class="form-group">
-                                   <a href="laporan_harian_print.php?id=<?php echo $item['id'] ?>" target="_blank" class="btn btn-info btn-block">
-                                       <i class="fa fa-print"></i> Print Laporan harian
-                                   </a>
-                               </div>
                             </div>
-                            <!-- /.card-body -->
                         </div>
+                        <!-- /.card -->
                     </div>
                 </section>
             </div>
@@ -152,6 +154,46 @@ ob_start();
                 2.3.0
                 </div>
             </footer>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal-tambah" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="tambah_regu_anggota_proses.php" method="POST">
+                    <input type="hidden" name="regu_id" value="<?php echo $item['id'] ?>">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tambah Regu Anggota</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Anggota</label>
+                            <select name="anggota_id" id="" class="form-control" required>
+                                <option value="">Pilih</option>
+                                <?php foreach ($anggotaItems as $anggotaItem) { ?>
+                                    <option value="<?php echo $anggotaItem['id']?>"><?php echo $anggotaItem['kode'] . ' - ' .$anggotaItem['nama'] ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tipe</label>
+                            <select name="type" id="" class="form-control" required>
+                                <option value="">Pilih</option>
+                                <option value="1">Ketua</option>
+                                <option value="0">Anggota</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary" id="btn-simpan-anggota">Simpan</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -172,7 +214,6 @@ ob_start();
     <script src="assets/js/custom.js"></script>
 </body>
 </html>
-
 
 <?php
 
