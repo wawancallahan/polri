@@ -27,6 +27,9 @@
             <div class="page-description">
             	You do not have access to this page.
             </div>
+            <div class="mt-3">
+              <a href="dashboard.php">Kembali ke Dashboard</a>
+            </div>
           </div>
         </div>
         <div class="simple-footer mt-5">
