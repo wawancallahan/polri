@@ -19,7 +19,7 @@ if ($item === null) {
     $_SESSION['type'] = 'danger';
     $_SESSION['message'] = 'Data Tidak Ditemukan';
 
-    header('Location: regu_surat_perintah.php?id=' . $surat_perintah_id . '&regu_id=' . $regu_id);
+    header('Location: regu_laporan_harian.php?id=' . $surat_perintah_id . '&regu_id=' . $regu_id);
     die();
 }
 

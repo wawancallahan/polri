@@ -2,7 +2,7 @@
 
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/Config/Session.php';
-// require __DIR__ . '/Middleware/checkAuth.php';
+require __DIR__ . '/Middleware/checkAuth.php';
 
 ob_start();
 

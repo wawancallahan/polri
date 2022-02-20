@@ -115,8 +115,8 @@ ob_start();
                                             <th>Nomor</th>
                                             <th>Tanggal</th>
                                             <th>Surat Perintah</th>
-                                            <th>Laporan Harian Hasil</th>
                                             <th>Laporan Harian</th>
+                                            <th>Laporan Harian Hasil</th>
                                             <th>Option</th>
                                         </tr>
                                     </thead>
@@ -132,12 +132,12 @@ ob_start();
                                                     </a>
                                                 </td>
                                                 <td>
-                                                    <a href="laporan_harian_hasil.php?id=<?php echo $suratPerintahItem['id'] ?>&regu_id=<?php echo $item['id'] ?>" class="btn btn-info btn-sm">
+                                                    <a href="laporan_harian.php?id=<?php echo $suratPerintahItem['id'] ?>&regu_id=<?php echo $item['id'] ?>" class="btn btn-info btn-sm">
                                                         <i class="fa fa-eye"></i> Lihat
                                                     </a>
                                                 </td>
                                                 <td>
-                                                    <a href="laporan_harian.php?id=<?php echo $suratPerintahItem['id'] ?>&regu_id=<?php echo $item['id'] ?>" class="btn btn-info btn-sm">
+                                                    <a href="laporan_harian_hasil.php?id=<?php echo $suratPerintahItem['id'] ?>&regu_id=<?php echo $item['id'] ?>" class="btn btn-info btn-sm">
                                                         <i class="fa fa-eye"></i> Lihat
                                                     </a>
                                                 </td>

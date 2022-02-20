@@ -108,6 +108,7 @@ ob_start();
                                             <th>Nomor</th>
                                             <th>Tanggal</th>
                                             <th>Laporan Harian</th>
+                                            <th>Laporan Harian Hasil</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -119,6 +120,12 @@ ob_start();
                                                 <td>
                                                     <a href="regu_laporan_harian.php?id=<?php echo $suratPerintahItem['id'] ?>&regu_id=<?php echo $item['id'] ?>" class="btn btn-success btn-sm">
                                                         <i class="fa fa-file"></i> Laporan Harian
+                                                    </a>
+                                                </td>
+
+                                                <td>
+                                                    <a href="regu_laporan_harian_hasil.php?id=<?php echo $suratPerintahItem['id'] ?>&regu_id=<?php echo $item['id'] ?>" class="btn btn-success btn-sm">
+                                                        <i class="fa fa-file"></i> Laporan Harian Hasil
                                                     </a>
                                                 </td>
                                             </tr>

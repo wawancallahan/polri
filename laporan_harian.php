@@ -105,6 +105,12 @@ ob_start();
                                 <h3 class="card-title">Daftar Nama Kegiatan</h3>
                             </div>
 
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <button class="btn btn-primary" data-toggle="modal" data-target="#modal-tambah">Tambah</button>
+                                </div>
+                            </div>
+
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0">
                                 <table class="table table-hover text-nowrap">
@@ -142,6 +148,70 @@ ob_start();
                         </div>
                     </div>
                 </section>
+
+                <?php foreach ($temaLaporanKegiatanItems as $index => $temaLaporanKegiatanItem) { ?> 
+                    <!-- Modal -->
+                    <div class="modal fade" id="modal-edit-<?php echo $index ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <form action="edit_tema_laporan_proses.php" method="POST">
+                                    <input type="hidden" name="id" value="<?php echo $temaLaporanKegiatanItem['id'] ?>">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Edit Nama Kegiatan</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label>Nama</label>
+                                            <input type="text" class="form-control" name="nama" value="<?php echo $temaLaporanKegiatanItem['nama'] ?>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Tanggal</label>
+                                            <input type="date" class="form-control" name="tanggal" id="" value="<?php echo $temaLaporanKegiatanItem['tanggal'] ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+
+                 <!-- Modal -->
+                 <div class="modal fade" id="modal-tambah" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <form action="tambah_tema_laporan_proses.php" method="POST">
+                                <input type="hidden" name="id" value="<?php echo $item['id'] ?>">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Tambah Nama Kegiatan</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label>Nama</label>
+                                        <input type="text" class="form-control" name="nama" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tanggal</label>
+                                        <input type="date" class="form-control" name="tanggal" id="" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <footer class="main-footer">
