@@ -12,9 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = input_form($_POST['password'] ?? null);
     $captcha = input_form($_POST['captcha'] ?? null);
 
-    echo var_dump($captcha, $_SESSION['captcha']);
-    die();
-
     if ($captcha !== $_SESSION['captcha']) {
         $_SESSION['type'] = 'danger';
         $_SESSION['message'] = 'Captcha Tidak Sesuai';

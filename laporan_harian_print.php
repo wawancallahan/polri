@@ -2,7 +2,7 @@
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/Config/Session.php';
 require __DIR__ . '/Config/Form.php';
-// require __DIR__ . '/middleware/hasAuth.php';
+// require __DIR__ . '/Middleware/hasAuth.php';
 
 use Model\SuratPerintah;
 use Model\TemaLaporan;

@@ -2,7 +2,7 @@
 
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/Config/Session.php';
-// require __DIR__ . '/middleware/hasAuth.php';
+require __DIR__ . '/Middleware/hasAuthAdmin.php';
 
 use Model\Anggota;
 
@@ -41,7 +41,7 @@ extract([
         <div class="main-wrapper container">
             <div class="navbar-bg"></div>
             <nav class="navbar navbar-expand-lg main-navbar">
-                <a href="index.html" class="navbar-brand sidebar-gone-hide">Stisla</a>
+                <a href="#" class="navbar-brand sidebar-gone-hide">Stisla</a>
                 <div class="navbar-nav">
                     <a href="#" class="nav-link sidebar-gone-show" data-toggle="sidebar"><i class="fas fa-bars"></i></a>
                 </div>
