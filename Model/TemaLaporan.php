@@ -135,4 +135,27 @@ class TemaLaporan extends DatabaseModel {
             return false;
         } 
     }
+
+    public function deleteBySuratPerintahId($id)
+    {
+        try {
+            if ($id !== "") {
+    
+                $query = "DELETE FROM tema_laporan WHERE surat_perintah_id = ?";
+                
+                $statement = $this->pdo->prepare($query);
+                
+                $execute = $statement->execute([
+                    $id,
+                ]);
+
+                return $execute;
+            } else {
+                return false;
+               
+            }
+        } catch (\Exception $e) {
+            return false;
+        } 
+    }
 }

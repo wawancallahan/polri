@@ -84,4 +84,29 @@ class DataLaporan extends DatabaseModel {
             return false;
         } 
     }
+
+    public function deleteByLaporan($id, $model, $jenis)
+    {
+        try {
+            if ($id !== "") {
+    
+                $query = "DELETE FROM data_laporan WHERE laporan_id = ? AND model = ? AND jenis = ?";
+                
+                $statement = $this->pdo->prepare($query);
+                
+                $execute = $statement->execute([
+                    $id,
+                    $model,
+                    $jenis
+                ]);
+
+                return $execute;
+            } else {
+                return false;
+               
+            }
+        } catch (\Exception $e) {
+            return false;
+        } 
+    }
 }

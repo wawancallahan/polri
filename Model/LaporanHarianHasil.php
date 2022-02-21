@@ -138,7 +138,30 @@ class LaporanHarianHasil extends DatabaseModel {
         try {
             if ($id !== "") {
     
-                $query = "DELETE FROM regu WHERE id = ?";
+                $query = "DELETE FROM laporan_harian_hasil WHERE id = ?";
+                
+                $statement = $this->pdo->prepare($query);
+                
+                $execute = $statement->execute([
+                    $id,
+                ]);
+
+                return $execute;
+            } else {
+                return false;
+               
+            }
+        } catch (\Exception $e) {
+            return false;
+        } 
+    }
+
+    public function deleteBySuratPerintahId($id)
+    {
+        try {
+            if ($id !== "") {
+    
+                $query = "DELETE FROM laporan_harian_hasil WHERE surat_perintah_id = ?";
                 
                 $statement = $this->pdo->prepare($query);
                 

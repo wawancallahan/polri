@@ -177,4 +177,27 @@ class SuratPerintah extends DatabaseModel {
             return false;
         } 
     }
+
+    public function deleteByReguId($id)
+    {
+        try {
+            if ($id !== "") {
+    
+                $query = "DELETE FROM surat_perintah WHERE regu_id = ?";
+                
+                $statement = $this->pdo->prepare($query);
+                
+                $execute = $statement->execute([
+                    $id,
+                ]);
+
+                return $execute;
+            } else {
+                return false;
+               
+            }
+        } catch (\Exception $e) {
+            return false;
+        } 
+    }
 }
