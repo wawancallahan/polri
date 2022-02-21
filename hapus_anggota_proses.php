@@ -6,15 +6,21 @@ require __DIR__ . '/Config/Form.php';
 
 use Model\Anggota;
 use Model\User;
+use Model\ReguAnggota;
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $id = input_form($_GET['id'] ?? null);
 
     $model = new Anggota();
-    $item = $model->deleteByUserId($id);
+    $data = $model->findByUserId($id);
+
+    $reguAnggotaModel = new ReguAnggota();
+    $reguAnggotaModel->deleteByAnggotaId($data['id']);
+
+    $item = $model->delete($data['id']);
 
     $userModel = new User();
-    $userModel->delete($id);
+    $userModel->delete($data['user_id']);
 
     switch ($item) {
         case true:

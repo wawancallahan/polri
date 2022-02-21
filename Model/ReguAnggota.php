@@ -127,4 +127,26 @@ class ReguAnggota extends DatabaseModel {
             return false;
         } 
     }
+
+    public function deleteByAnggotaId($id) {
+        try {
+            if ($id !== "") {
+    
+                $query = "DELETE FROM regu_anggota WHERE anggota_id = ?";
+                
+                $statement = $this->pdo->prepare($query);
+                
+                $execute = $statement->execute([
+                    $id,
+                ]);
+
+                return $execute;
+            } else {
+                return false;
+               
+            }
+        } catch (\Exception $e) {
+            return false;
+        } 
+    }
 }
